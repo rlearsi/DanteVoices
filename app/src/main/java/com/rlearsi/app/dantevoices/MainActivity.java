@@ -2,7 +2,6 @@ package com.rlearsi.app.dantevoices;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,13 +14,17 @@ import com.rlearsi.app.dantevoices.databinding.ActivityMainBinding;
 import com.rlearsi.app.dantevoices.events.Adapter;
 import com.rlearsi.app.dantevoices.events.ItemsEvents;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements InterfaceUpdates {
 
@@ -33,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
     InterfaceUpdates interfaceUpdates;
     Adapter adapter;
     List<ItemsEvents> list = new ArrayList<>();
-    private List<MediaPlayer> mediaPlayers = new ArrayList<>();
+    //private List<MediaPlayer> mediaPlayers = new ArrayList<>();
+    private HashMap<Integer, MediaPlayer> mediaPlayers = new HashMap<>();
+    MediaPlayer mediaPlayer;
     //private MediaPlayer mediaPlayer;
 
     @Override
@@ -71,36 +76,36 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
 
     public void contentMain() {
 
-        GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, 4);
         main.rvListVoices.setLayoutManager(layoutManager);
 
-        list.add(new ItemsEvents(1, "ah_mizeravi"));
-        list.add(new ItemsEvents(2, "ai_cabo_douradinho"));
-        list.add(new ItemsEvents(3, "ai_fatal_aiaiai"));
-        list.add(new ItemsEvents(4, "ai_tata"));
-        list.add(new ItemsEvents(5, "ai_todis"));
-        list.add(new ItemsEvents(6, "ai_will"));
-        list.add(new ItemsEvents(7, "ai_will_2"));
-        list.add(new ItemsEvents(8, "ai_will_3"));
-        list.add(new ItemsEvents(9, "assistir_teletumbies"));
-        list.add(new ItemsEvents(10, "caiu_de_novo"));
-        list.add(new ItemsEvents(11, "claudia_capataz"));
-        list.add(new ItemsEvents(12, "da_mais_xp_pa_eu"));
-        list.add(new ItemsEvents(13, "e_mermo_ne"));
-        list.add(new ItemsEvents(14, "e_o_jogas"));
-        list.add(new ItemsEvents(15, "eu_gosto_assim"));
-        list.add(new ItemsEvents(16, "fatal_bobebou"));
-        list.add(new ItemsEvents(17, "fatal_morreu_pro_cristal"));
-        list.add(new ItemsEvents(18, "fatal_morreu_pro_cristal2"));
-        list.add(new ItemsEvents(19, "ja_pensou"));
-        list.add(new ItemsEvents(20, "jogo_na_frente_fatal_joga_atras"));
-        list.add(new ItemsEvents(21, "perdeu_tempo_ouvindo"));
-        list.add(new ItemsEvents(22, "pois_nao"));
-        list.add(new ItemsEvents(23, "smoke_e_docinho"));
-        list.add(new ItemsEvents(24, "smoke_e_fudido_mermo_viu"));
-        list.add(new ItemsEvents(25, "tanko_o_smoke_na_vida"));
-        list.add(new ItemsEvents(26, "verme_levantou_voo"));
-        list.add(new ItemsEvents(27, "voce_vai_aparecer_no_top"));
+        list.add(new ItemsEvents(1, "Ah Mizeravi!","ah_mizeravi"));
+        list.add(new ItemsEvents(2, "Cabô douradinho!", "ai_cabo_douradinho"));
+        list.add(new ItemsEvents(3, "ai Fatal aiaiai!", "ai_fatal_aiaiai"));
+        list.add(new ItemsEvents(4, "Ai tata!", "ai_tata"));
+        list.add(new ItemsEvents(5, "Ai todis!", "ai_todis"));
+        list.add(new ItemsEvents(6, "Ai Will!", "ai_will"));
+        list.add(new ItemsEvents(7, "Ai Will 2!", "ai_will_2"));
+        list.add(new ItemsEvents(8, "Ai Will 3!", "ai_will_3"));
+        list.add(new ItemsEvents(9, "Assistir Teletumbies!", "assistir_teletumbies"));
+        list.add(new ItemsEvents(10, "Caiu de novo", "caiu_de_novo"));
+        list.add(new ItemsEvents(11, "Claudia capataz", "claudia_capataz"));
+        list.add(new ItemsEvents(12, "Da mais xp pa eu", "da_mais_xp_pa_eu"));
+        list.add(new ItemsEvents(13, "É mermo né", "e_mermo_ne"));
+        list.add(new ItemsEvents(14, "É o jogas", "e_o_jogas"));
+        list.add(new ItemsEvents(15, "Eu gosto assim", "eu_gosto_assim"));
+        list.add(new ItemsEvents(16, "Fatal bobebou", "fatal_bobebou"));
+        list.add(new ItemsEvents(17, "Fatal morreu pro cristal", "fatal_morreu_pro_cristal"));
+        list.add(new ItemsEvents(18, "Fatal morreu pro cristal 2", "fatal_morreu_pro_cristal2"));
+        list.add(new ItemsEvents(19, "Já pensou", "ja_pensou"));
+        list.add(new ItemsEvents(20, "Jogo na frente Fatal joga atras", "jogo_na_frente_fatal_joga_atras"));
+        list.add(new ItemsEvents(21, "Perdeu tempo ouvindo", "perdeu_tempo_ouvindo"));
+        list.add(new ItemsEvents(22, "Pois não", "pois_nao"));
+        list.add(new ItemsEvents(23, "Smoke é docinho", "smoke_e_docinho"));
+        list.add(new ItemsEvents(24, "Smoke é fudido mermo viu", "smoke_e_fudido_mermo_viu"));
+        list.add(new ItemsEvents(25, "Tanko o Smoke na vida", "tanko_o_smoke_na_vida"));
+        list.add(new ItemsEvents(26, "Verme levantou voo", "verme_levantou_voo"));
+        list.add(new ItemsEvents(27, "Você vai aparecer no top", "voce_vai_aparecer_no_top"));
 
         new Thread(() -> {
 
@@ -118,57 +123,65 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
     }
 
     @Override
-    public void handleItems(int position, int id, String title) {
+    public void handleItems(int position, int id, String title, String file_name) {
 
-        String path = "android.resource://" + getPackageName() + "/raw/" + title;
+        String path = "android.resource://" + getPackageName() + "/raw/" + file_name;
 
-        Log.i(TAG, path + " - position: " + position);
+        //Log.i(TAG, path + " - position: " + position);
 
-        if (mediaPlayers.get(position) !=null) {
+        if (mediaPlayers.containsKey(id)) {
 
-            if (mediaPlayers.get(position).isPlaying()) {
-                mediaPlayers.get(position).stop();
-                mediaPlayers.get(position).reset();
-            }
-        } else {
-
-            MediaPlayer mediaPlayer = new MediaPlayer();
-
-            mediaPlayers.add(mediaPlayer);
-            //mediaPlayer[0];
+            //if (mediaPlayers.get(id) != null) {
 
             try {
-                mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
-                mediaPlayer.prepare();
 
-            /*mediaPlayer.setOnCompletionListener((MediaPlayer.OnCompletionListener) player -> {
+                if (Objects.requireNonNull(mediaPlayers.get(id)).isPlaying()) {
 
-                if (player.isPlaying()) {
-                    player.pause();
-                    player.seekTo(0);
+                    Objects.requireNonNull(mediaPlayers.get(id)).stop();
+                    Objects.requireNonNull(mediaPlayers.get(id)).reset();
+
                 }
-                //player.stop();
-                //player.reset();
 
-            });*/
+            } catch (Exception ignored) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
-            mediaPlayers.add(mediaPlayer);
-            mediaPlayer.start();
 
         }
 
+        mediaPlayer = new MediaPlayer();
+
+        this.mediaPlayers.put(id, mediaPlayer);
+
+        try {
+
+            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
+            mediaPlayer.prepare();
+
+            mediaPlayer.setOnCompletionListener((MediaPlayer.OnCompletionListener) player -> {
+
+                player.stop();
+                player.reset();
+
+                adapter.updateRow(new ItemsEvents(id, title, file_name));
+
+            });
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        mediaPlayer.start();
+
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -192,5 +205,55 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
                 || super.onSupportNavigateUp();
     }*/
 
+    /*@Override
+    public void onBackPressed() {
+
+        if (isHome) {
+
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            toast(getString(R.string.press_again_to_exit));
+
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+
+        } else {
+
+            showHome();
+
+        }
+
+    }*/
+
+    public void destroy(HashMap<Integer, MediaPlayer> mp) {
+
+        for (Map.Entry<Integer, MediaPlayer> entry : mp.entrySet()) {
+
+            Integer key = entry.getKey();
+
+            Objects.requireNonNull(mp.get(key)).release();
+
+            Log.i(TAG, "o MediaPlayer " + key + " foi liberado");
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        destroy(mediaPlayers);
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        destroy(mediaPlayers);
+        super.onDestroy();
+    }
 
 }

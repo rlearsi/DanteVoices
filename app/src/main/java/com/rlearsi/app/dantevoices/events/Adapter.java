@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Holder> {
 
-    private List<ItemsEvents> topics;
+    private List<ItemsEvents> events;
     private int type;
     private Context context;
     private long date;
@@ -31,8 +31,8 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
     private int ciclo_menstrual = 0;
     private InterfaceUpdates interfaceUpdates;
 
-    public Adapter(List<ItemsEvents> topics, InterfaceUpdates interfaceUpdates, Context context) {
-        this.topics = topics;
+    public Adapter(List<ItemsEvents> events, InterfaceUpdates interfaceUpdates, Context context) {
+        this.events = events;
         this.context = context;
         this.interfaceUpdates = interfaceUpdates;
     }
@@ -51,62 +51,59 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, final int position) {
 
-        final ItemsEvents topic = topics.get(position);
+        final ItemsEvents topic = events.get(position);
 
         //Log.i(TAG, "CICLO: " + ciclo_menstrual);
 
         final String title = topic.getTitle();
         final int id = topic.getId();
+        final String file_name = topic.getFileName();
 
         holder.title_voice.setText(title);
 
         //Formata "x Semanas"
         //String x_weeks = String.format(Locale.ENGLISH, "%s%s%s", "<b>", get_x_weeks, "</b>. ");
 
-        //holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square));
+        //
         //holder.eventTitle.setTextColor(ContextCompat.getColor(context, R.color.colorHint));
 
         //holder.box.setOnClickListener(v -> interfaceUpdates.handleItems(id, title));
 
+        holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square));
+
         holder.box.setOnClickListener(v -> {
 
-            holder.play_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause_24));
+            //holder.play_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause_24));
 
-            interfaceUpdates.handleItems(position, id, title);
-
-            /*String path = "android.resource://" + context.getPackageName() + "/raw/" + title;
-
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioAttributes(
-                    new AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-            );
-            try {
-                mediaPlayer.setDataSource(context.getApplicationContext(), Uri.parse(path));
-                mediaPlayer.prepare();
-                //mediaPlayer.setOnSeekCompleteListener((MediaPlayer.OnSeekCompleteListener) player -> {});
-
-                mediaPlayer.setOnCompletionListener((MediaPlayer.OnCompletionListener) player -> {
-                    //player.stop();
-                    holder.play_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play_circle_outline_24));
-                    // next audio file
-                });
-
-                mediaPlayer.start();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+            //holder.box.setAlpha(0.8f);
+            holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square_2));
+            interfaceUpdates.handleItems(position, id, title, file_name);
 
         });
 
     }
 
+    public void addTopic(ItemsEvents event) {
+
+        events.add(getItemCount(), event);
+        notifyItemInserted(getItemCount());
+
+    }
+
+    public void updateRow(ItemsEvents event) {
+
+        int position = events.indexOf(event);
+        events.set(position, event);
+
+        //holder.box.setAlpha(0.5f);
+
+        notifyItemChanged(position);
+
+    }
+
     @Override
     public int getItemCount() {
-        return topics != null ? topics.size() : 0;
+        return events != null ? events.size() : 0;
     }
 
     private Activity getActivity(View view) {

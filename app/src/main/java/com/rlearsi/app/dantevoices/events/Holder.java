@@ -13,14 +13,14 @@ class Holder extends RecyclerView.ViewHolder {
 
     ConstraintLayout box;
     TextView title_voice;
-    ImageView play_icon;
+    //ImageView play_icon;
 
     Holder(View itemView) {
 
         super(itemView);
 
         title_voice = itemView.findViewById(R.id.title_voice);
-        play_icon = itemView.findViewById(R.id.play_icon);
+        //play_icon = itemView.findViewById(R.id.play_icon);
         box = itemView.findViewById(R.id.box);
 
     }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_001"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -28,6 +29,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="@dimen/spacing_md"
         tools:listitem="@layout/list_voices" />
 
     <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
