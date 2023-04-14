@@ -68,15 +68,10 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
         if (holder.backgroundDrawable instanceof LayerDrawable) {
 
             LayerDrawable layerDrawable = (LayerDrawable) holder.backgroundDrawable;
-            GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.gradient_button);
+            GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.player_one);
             gradientDrawable.setColors(new int[]{contextColor, contextColor});
 
-        } /*else {
-
-            holder.gradientDrawable.setColor(contextColor);
-            holder.box.setBackground(holder.gradientDrawable);
-
-        }*/
+        }
 
         holder.box.setOnClickListener(v -> {
 
@@ -85,15 +80,10 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
             if (holder.backgroundDrawable instanceof LayerDrawable) {
 
                 LayerDrawable layerDrawable = (LayerDrawable) holder.backgroundDrawable;
-                GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.gradient_button);
+                GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.player_one);
                 gradientDrawable.setColors(new int[]{Color.parseColor(color), Color.parseColor(color)});
 
-            } /*else {
-
-                holder.gradientDrawable.setColor(Color.parseColor(color));
-                holder.box.setBackground(holder.gradientDrawable);
-
-            }*/
+            }
 
             interfaceUpdates.handleItems(position, id, name, file_name, color, isLoop);
 

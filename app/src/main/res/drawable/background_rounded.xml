@@ -1,11 +1,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/gradient_button">
+    <item android:id="@+id/player_one">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/spacing_sm" />
-            <gradient
-                android:startColor="@color/pad_001"
-                android:endColor="@color/pad_001"
-                android:angle="270" />
+            <solid android:color="@color/black_002" />
             <padding
                 android:bottom="@dimen/spacing_sm"
                 android:left="@dimen/spacing_sm"
@@ -13,13 +10,10 @@
                 android:top="@dimen/spacing_sm" />
         </shape>
     </item>
-    <item android:id="@+id/flat_button">
+    <item android:id="@+id/layer_two">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/spacing_sm" />
-            <gradient
-                android:startColor="#00000000"
-                android:endColor="#30000000"
-                android:angle="90" />
+            <solid android:color="#F7221F28" />
         </shape>
     </item>
 </layer-list>
