@@ -3,10 +3,9 @@ package com.rlearsi.app.dantevoices.events;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rlearsi.app.dantevoices.InterfaceUpdates;
 import com.rlearsi.app.dantevoices.R;
 
-import java.io.IOException;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Holder> {
 
-    private List<ItemsEvents> events;
+    private List<Items> events;
     private int type;
     private Context context;
     private long date;
@@ -31,7 +29,7 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
     private int ciclo_menstrual = 0;
     private InterfaceUpdates interfaceUpdates;
 
-    public Adapter(List<ItemsEvents> events, InterfaceUpdates interfaceUpdates, Context context) {
+    public Adapter(List<Items> events, InterfaceUpdates interfaceUpdates, Context context) {
         this.events = events;
         this.context = context;
         this.interfaceUpdates = interfaceUpdates;
@@ -51,46 +49,66 @@ public class Adapter extends RecyclerView.Adapter<Holder> {
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, final int position) {
 
-        final ItemsEvents topic = events.get(position);
+        final Items topic = events.get(position);
 
         //Log.i(TAG, "CICLO: " + ciclo_menstrual);
 
-        final String title = topic.getTitle();
+        final String name = topic.getName();
         final int id = topic.getId();
         final String file_name = topic.getFileName();
+        final String color = topic.getColor();
+        final boolean isLoop = topic.getLoop();
 
-        holder.title_voice.setText(title);
+        holder.title_voice.setText(name);
 
-        //Formata "x Semanas"
-        //String x_weeks = String.format(Locale.ENGLISH, "%s%s%s", "<b>", get_x_weeks, "</b>. ");
+        //set default color
+        int contextColor = ContextCompat.getColor(context, R.color.black_002);
+        //holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square));
 
-        //
-        //holder.eventTitle.setTextColor(ContextCompat.getColor(context, R.color.colorHint));
+        if (holder.backgroundDrawable instanceof LayerDrawable) {
 
-        //holder.box.setOnClickListener(v -> interfaceUpdates.handleItems(id, title));
+            LayerDrawable layerDrawable = (LayerDrawable) holder.backgroundDrawable;
+            GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.gradient_button);
+            gradientDrawable.setColors(new int[]{contextColor, contextColor});
 
-        holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square));
+        } /*else {
+
+            holder.gradientDrawable.setColor(contextColor);
+            holder.box.setBackground(holder.gradientDrawable);
+
+        }*/
 
         holder.box.setOnClickListener(v -> {
 
-            //holder.play_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause_24));
-
             //holder.box.setAlpha(0.8f);
-            holder.box.setBackground(ContextCompat.getDrawable(context, R.drawable.box_square_2));
-            interfaceUpdates.handleItems(position, id, title, file_name);
+
+            if (holder.backgroundDrawable instanceof LayerDrawable) {
+
+                LayerDrawable layerDrawable = (LayerDrawable) holder.backgroundDrawable;
+                GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.gradient_button);
+                gradientDrawable.setColors(new int[]{Color.parseColor(color), Color.parseColor(color)});
+
+            } /*else {
+
+                holder.gradientDrawable.setColor(Color.parseColor(color));
+                holder.box.setBackground(holder.gradientDrawable);
+
+            }*/
+
+            interfaceUpdates.handleItems(position, id, name, file_name, color, isLoop);
 
         });
 
     }
 
-    public void addTopic(ItemsEvents event) {
+    public void addTopic(Items event) {
 
         events.add(getItemCount(), event);
         notifyItemInserted(getItemCount());
 
     }
 
-    public void updateRow(ItemsEvents event) {
+    public void updateRow(Items event) {
 
         int position = events.indexOf(event);
         events.set(position, event);

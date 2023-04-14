@@ -1,0 +1,25 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/gradient_button">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/spacing_sm" />
+            <gradient
+                android:startColor="@color/pad_001"
+                android:endColor="@color/pad_001"
+                android:angle="270" />
+            <padding
+                android:bottom="@dimen/spacing_sm"
+                android:left="@dimen/spacing_sm"
+                android:right="@dimen/spacing_sm"
+                android:top="@dimen/spacing_sm" />
+        </shape>
+    </item>
+    <item android:id="@+id/flat_button">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/spacing_sm" />
+            <gradient
+                android:startColor="#00000000"
+                android:endColor="#30000000"
+                android:angle="90" />
+        </shape>
+    </item>
+</layer-list>

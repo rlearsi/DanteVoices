@@ -6,7 +6,7 @@
     android:layout_height="74dp"
     android:layout_marginTop="@dimen/spacing_md"
     android:layout_marginStart="@dimen/spacing_md"
-    android:background="@drawable/box_square">
+    android:background="@drawable/background_rounded">
 
     <!-- <ImageView
         android:id="@+id/play_icon"

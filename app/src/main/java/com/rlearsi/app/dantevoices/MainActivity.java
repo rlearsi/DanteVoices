@@ -11,12 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.rlearsi.app.dantevoices.databinding.ActivityMainBinding;
+import com.rlearsi.app.dantevoices.db.Dao;
+import com.rlearsi.app.dantevoices.db.DbHelper;
 import com.rlearsi.app.dantevoices.events.Adapter;
-import com.rlearsi.app.dantevoices.events.ItemsEvents;
+import com.rlearsi.app.dantevoices.events.Items;
 
-import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
@@ -29,13 +29,13 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements InterfaceUpdates {
 
     private static final String TAG = "xdantex";
-    //private AppBarConfiguration appBarConfiguration;
+    private Dao dao;
     private ActivityMainBinding main;
     Activity activity;
     Context context;
     InterfaceUpdates interfaceUpdates;
     Adapter adapter;
-    List<ItemsEvents> list = new ArrayList<>();
+    //List<Items> list = new ArrayList<>();
     //private List<MediaPlayer> mediaPlayers = new ArrayList<>();
     private HashMap<Integer, MediaPlayer> mediaPlayers = new HashMap<>();
     MediaPlayer mediaPlayer;
@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
         interfaceUpdates = this;
 
         setSupportActionBar(main.toolbar);
+
+        dao = new Dao(context);
 
         //mediaPlayer = new MediaPlayer();
         /*mediaPlayer.setAudioAttributes(
@@ -79,38 +81,38 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
         GridLayoutManager layoutManager = new GridLayoutManager(context, 4);
         main.rvListVoices.setLayoutManager(layoutManager);
 
-        list.add(new ItemsEvents(1, "Ah Mizeravi!","ah_mizeravi"));
-        list.add(new ItemsEvents(2, "Cabô douradinho!", "ai_cabo_douradinho"));
-        list.add(new ItemsEvents(3, "ai Fatal aiaiai!", "ai_fatal_aiaiai"));
-        list.add(new ItemsEvents(4, "Ai tata!", "ai_tata"));
-        list.add(new ItemsEvents(5, "Ai todis!", "ai_todis"));
-        list.add(new ItemsEvents(6, "Ai Will!", "ai_will"));
-        list.add(new ItemsEvents(7, "Ai Will 2!", "ai_will_2"));
-        list.add(new ItemsEvents(8, "Ai Will 3!", "ai_will_3"));
-        list.add(new ItemsEvents(9, "Assistir Teletumbies!", "assistir_teletumbies"));
-        list.add(new ItemsEvents(10, "Caiu de novo", "caiu_de_novo"));
-        list.add(new ItemsEvents(11, "Claudia capataz", "claudia_capataz"));
-        list.add(new ItemsEvents(12, "Da mais xp pa eu", "da_mais_xp_pa_eu"));
-        list.add(new ItemsEvents(13, "É mermo né", "e_mermo_ne"));
-        list.add(new ItemsEvents(14, "É o jogas", "e_o_jogas"));
-        list.add(new ItemsEvents(15, "Eu gosto assim", "eu_gosto_assim"));
-        list.add(new ItemsEvents(16, "Fatal bobebou", "fatal_bobebou"));
-        list.add(new ItemsEvents(17, "Fatal morreu pro cristal", "fatal_morreu_pro_cristal"));
-        list.add(new ItemsEvents(18, "Fatal morreu pro cristal 2", "fatal_morreu_pro_cristal2"));
-        list.add(new ItemsEvents(19, "Já pensou", "ja_pensou"));
-        list.add(new ItemsEvents(20, "Jogo na frente Fatal joga atras", "jogo_na_frente_fatal_joga_atras"));
-        list.add(new ItemsEvents(21, "Perdeu tempo ouvindo", "perdeu_tempo_ouvindo"));
-        list.add(new ItemsEvents(22, "Pois não", "pois_nao"));
-        list.add(new ItemsEvents(23, "Smoke é docinho", "smoke_e_docinho"));
-        list.add(new ItemsEvents(24, "Smoke é fudido mermo viu", "smoke_e_fudido_mermo_viu"));
-        list.add(new ItemsEvents(25, "Tanko o Smoke na vida", "tanko_o_smoke_na_vida"));
-        list.add(new ItemsEvents(26, "Verme levantou voo", "verme_levantou_voo"));
-        list.add(new ItemsEvents(27, "Você vai aparecer no top", "voce_vai_aparecer_no_top"));
+        /*list.add(new Items(1, "Ah Mizeravi!","ah_mizeravi"));
+        list.add(new Items(2, "Cabô douradinho!", "ai_cabo_douradinho"));
+        list.add(new Items(3, "Ai Fatal aiaiai!", "ai_fatal_aiaiai"));
+        list.add(new Items(4, "Ai tata!", "ai_tata"));
+        list.add(new Items(5, "Ai todis!", "ai_todis"));
+        list.add(new Items(6, "Ai Will!", "ai_will"));
+        list.add(new Items(7, "Ai Will 2!", "ai_will_2"));
+        list.add(new Items(8, "Ai Will 3!", "ai_will_3"));
+        list.add(new Items(9, "Assistir Teletumbies!", "assistir_teletumbies"));
+        list.add(new Items(10, "Caiu de novo", "caiu_de_novo"));
+        list.add(new Items(11, "Claudia capataz", "claudia_capataz"));
+        list.add(new Items(12, "Da mais xp pa eu", "da_mais_xp_pa_eu"));
+        list.add(new Items(13, "É mermo né", "e_mermo_ne"));
+        list.add(new Items(14, "É o jogas", "e_o_jogas"));
+        list.add(new Items(15, "Eu gosto assim", "eu_gosto_assim"));
+        list.add(new Items(16, "Fatal bobeou", "fatal_bobeou"));
+        list.add(new Items(17, "Fatal morreu pro cristal", "fatal_morreu_pro_cristal"));
+        list.add(new Items(18, "Fatal morreu pro cristal 2", "fatal_morreu_pro_cristal2"));
+        list.add(new Items(19, "Já pensou", "ja_pensou"));
+        list.add(new Items(20, "Jogo na frente Fatal joga atras", "jogo_na_frente_fatal_joga_atras"));
+        list.add(new Items(21, "Perdeu tempo ouvindo", "perdeu_tempo_ouvindo"));
+        list.add(new Items(22, "Pois não", "pois_nao"));
+        list.add(new Items(23, "Smoke é docinho", "smoke_e_docinho"));
+        list.add(new Items(24, "Smoke é fudido mermo viu", "smoke_e_fudido_mermo_viu"));
+        list.add(new Items(25, "Tanko o Smoke na vida", "tanko_o_smoke_na_vida"));
+        list.add(new Items(26, "Verme levantou voo", "verme_levantou_voo"));
+        list.add(new Items(27, "Você vai aparecer no top", "voce_vai_aparecer_no_top"));*/
 
         new Thread(() -> {
 
             // Adiciona o adapter que irá anexar os objetos à lista.
-            adapter = new Adapter(list, interfaceUpdates, context);
+            adapter = new Adapter(dao.list(0), interfaceUpdates, context);
 
             runOnUiThread(() -> {
 
@@ -123,15 +125,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
     }
 
     @Override
-    public void handleItems(int position, int id, String title, String file_name) {
+    public void handleItems(int position, int id, String name, String file_name, String color, boolean isLoop) {
 
         String path = "android.resource://" + getPackageName() + "/raw/" + file_name;
 
-        //Log.i(TAG, path + " - position: " + position);
-
         if (mediaPlayers.containsKey(id)) {
-
-            //if (mediaPlayers.get(id) != null) {
 
             try {
 
@@ -157,12 +155,13 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
             mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
             mediaPlayer.prepare();
 
-            mediaPlayer.setOnCompletionListener((MediaPlayer.OnCompletionListener) player -> {
+            mediaPlayer.setOnCompletionListener(player -> {
 
                 player.stop();
                 player.reset();
 
-                adapter.updateRow(new ItemsEvents(id, title, file_name));
+                adapter.updateRow(new Items(id, name, file_name, color, isLoop));
+                dao.setPlay(id);
 
             });
 
@@ -196,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceUpdates 
         }
 
         return super.onOptionsItemSelected(item);
+
     }
 
     /*@Override
